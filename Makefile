@@ -36,7 +36,25 @@ ingest: # INGESTS DATA INTO DUCKDB
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/emprego:/src --rm --name ingest_data worker ingest_data.py
 load: # LOADS DATA FROM DUCKDB TO POSTGRES
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/postgres:/src/postgres --rm --name duckdb duckdb -no-stdin -init ./postgres/scripts/generate_ids.sql $(DB_PATH_ARG)
+	@echo "${BLUE}Data loaded finished!${END}"
 patch: # MODIFIES DATA IN POSTGRES DATABASE
 	docker exec $$(docker ps -f name=post -q) psql -U ${PGUSER} -d ${PGDATABASE} -f ./postgres/scripts/constraints.sql ${PGDATABASE}
+	@echo "${BLUE}Data patching finished!${END}"
 debug: # STARTS A DEBUG SESSION IN WORKER (PYTHON ENVIRONMENT)
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/emprego:/src --rm --entrypoint /bin/bash -i -t --name debug worker
+
+
+
+
+
+
+PURPLE = \033[95m
+CYAN = \033[96m
+DARKCYAN = \033[36m
+BLUE = \033[94m
+GREEN = \033[92m
+YELLOW = \033[93m
+RED = \033[91m
+BOLD = \033[1m
+UNDERLINE = \033[4m
+END = \033[0m

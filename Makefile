@@ -20,7 +20,7 @@ build: # BUILDS ALL DOCKER IMAGES NEEDED FOR THE PROJECT
 	docker build -t poc1-worker:latest -f ./docker/worker.Dockerfile .
 	docker build -t poc1-duckdb:latest -f ./docker/duckdb.Dockerfile --build-arg DB_PATH_ARG=$(DB_PATH_ARG) .
 clean: # REMOVES ALL GENERATED FILES
-	docker stop $$(docker ps -f name=poc1 -q)
+	docker stop $$(docker ps -f name=poc1 -q) || true
 	rm -rf emprego/db/*
 	rm -rf postgres/postgres_data
 	rm -rf $$(find . -type d -name "__pycache__" | xargs)

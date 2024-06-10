@@ -1,6 +1,7 @@
 import os
 import faker
-faker.Faker.seed(0)
+import random
+
 fake = faker.Faker(locale='pt_BR')
 
 class BaseModel:

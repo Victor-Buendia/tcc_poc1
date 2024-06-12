@@ -33,7 +33,7 @@ def no_transform(dir_name: str, file_path: str, thread_id: int) -> None:
         file.write(json.dumps(transformed_data, indent=4))
 
 transformation_mapping = {
-    'candidaturas': transform_candidaturas,
+    'candidaturas': no_transform,
     'empresas': no_transform,
     'vagas': no_transform,
 }

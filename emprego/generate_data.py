@@ -18,17 +18,17 @@ def generate_data(thread_id: int, model: BaseModel, record_amount: int) -> None:
 
         data = [model().__dict__ for _ in range(record_amount)]
         log.info(f'Data successfully generated for {model_name} in thread {thread_id}...')
+
+        log.info(f'Saving data for {model_name} in thread {thread_id}...')
+
+        with open(raw_path.format(model_name.lower(), model_name.lower(), thread_id), 'w') as file:
+            path = raw_path.format(model_name.lower(), model_name.lower(), thread_id)
+            log.info(f'Saving data for for {model_name} in thread {thread_id} at {path}...')
+
+            file.write(json.dumps(data, indent = 4))
+            log.info(f'Data successfully saved for {model_name} in thread {thread_id} at {path}...')
     except Exception as e:
-        print(e)
-
-    log.info(f'Saving data for {model_name} in thread {thread_id}...')
-
-    with open(raw_path.format(model_name.lower(), model_name.lower(), thread_id), 'w') as file:
-        path = raw_path.format(model_name.lower(), model_name.lower(), thread_id)
-        log.info(f'Saving data for for {model_name} in thread {thread_id} at {path}...')
-
-        file.write(json.dumps(data, indent = 4))
-        log.info(f'Data successfully saved for {model_name} in thread {thread_id} at {path}...')
+        log.error(e)
 
 if __name__ == '__main__':
 

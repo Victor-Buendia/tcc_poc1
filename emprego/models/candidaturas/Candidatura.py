@@ -1,23 +1,50 @@
 from models.BaseModel import *
+from . import *
 
 class Candidatura(BaseModel):
     def __init__(self, **kwargs):
-        kwargs.setdefault('id_candidatura', None)
-        kwargs.setdefault('id_vaga', fake.random_element(list(range(1, int(os.environ.get('N_VAGAS'))))))
-        kwargs.setdefault('nome', fake.name())
-        kwargs.setdefault('cpf', fake.cpf())
-        kwargs.setdefault('data_nascimento', fake.date_of_birth(minimum_age=18, maximum_age=60).isoformat())
-        kwargs.setdefault('genero', fake.random_element(elements=('Masculino', 'Feminino', 'Outro')))
-        kwargs.setdefault('estado_civil', fake.random_element(elements=('Solteiro', 'Casado', 'Divorciado', 'Viúvo')))
-        kwargs.setdefault('endereco', fake.address().replace('\n', ', '))
-        kwargs.setdefault('cidade', fake.city())
-        kwargs.setdefault('estado', fake.estado())
-        kwargs.setdefault('pais', 'Brasil')
-        kwargs.setdefault('telefone', fake.cellphone_number())
-        kwargs.setdefault('email', fake.email())
-        kwargs.setdefault('escolaridade', fake.random_element(elements=('Ensino Fundamental', 'Ensino Médio', 'Ensino Superior', 'Pós-Graduação', 'Mestrado', 'Doutorado')))
-        kwargs.setdefault('experiencia_profissional', fake.text(max_nb_chars=300))
-        kwargs.setdefault('habilidades', ', '.join(fake.words(nb=5)))
-        kwargs.setdefault('idiomas', ', '.join(fake.random_choices(elements=['Inglês', 'Espanhol', 'Francês', 'Alemão', 'Chinês', 'Japonês'])))
-        kwargs.setdefault('portfolio_url', fake.url())
+        nro_vagas = list(range(1, int(os.environ.get('N_VAGAS'))))
+                         
+        id_candidatura = 1
+        id_vaga = int(fake.random_element(elements=nro_vagas))
+        nome = fake.random_element(elements=job_titles)
+        cpf = fake.cpf()
+        data_nascimento = fake.date_of_birth(minimum_age=18, maximum_age=60).isoformat()
+        genero = fake.random_element(elements=('Masculino', 'Feminino', 'Outro'))
+        estado_civil = fake.random_element(elements=('Solteiro', 'Casado', 'Divorciado', 'Viúvo'))
+        endereco = fake.address().replace('\n', ', ')
+        cidade = fake.city()
+
+        estado = fake.estado()
+        estado_endereco = endereco.split('/')[-1].strip()
+        while estado_endereco != estado[0]:
+            estado = fake.estado()
+            
+        pais = 'Brasil'
+        telefone = fake.cellphone_number()
+        email = fake.email()
+        escolaridade = fake.random_element(elements=('Ensino Fundamental', 'Ensino Médio', 'Ensino Superior', 'Pós-Graduação', 'Mestrado', 'Doutorado'))
+        experiencia_profissional = fake.text(max_nb_chars=300)
+        habilidades = ', '.join(fake.words(nb=5))
+        idiomas = ', '.join(fake.random_choices(elements=['Inglês', 'Espanhol', 'Francês', 'Alemão', 'Chinês', 'Japonês']))
+        portfolio_url = fake.url()
+
+        kwargs.setdefault('id_candidatura', id_candidatura)
+        kwargs.setdefault('id_vaga', id_vaga)
+        kwargs.setdefault('nome', nome)
+        kwargs.setdefault('cpf', cpf)
+        kwargs.setdefault('data_nascimento', data_nascimento)
+        kwargs.setdefault('genero', genero)
+        kwargs.setdefault('estado_civil', estado_civil)
+        kwargs.setdefault('endereco', endereco)
+        kwargs.setdefault('cidade', cidade)
+        kwargs.setdefault('estado', estado)
+        kwargs.setdefault('pais', pais)
+        kwargs.setdefault('telefone', telefone)
+        kwargs.setdefault('email', email)
+        kwargs.setdefault('escolaridade', escolaridade)
+        kwargs.setdefault('experiencia_profissional', experiencia_profissional)
+        kwargs.setdefault('habilidades', habilidades)
+        kwargs.setdefault('idiomas', idiomas)
+        kwargs.setdefault('portfolio_url', portfolio_url)
         super().__init__(**kwargs)

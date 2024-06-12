@@ -1,5 +1,6 @@
 import os
 import faker
+import regex
 import random
 
 fake = faker.Faker(locale='pt_BR')

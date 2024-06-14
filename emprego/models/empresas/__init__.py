@@ -1,4 +1,4 @@
-empresas = [
+companies = [
     "TecBrasil Soluções", "AlphaTech Inovações", "Bravo Engenharia", "Delta Construções", "Echo Telecomunicações",
     "Foxtrot Tecnologia", "GolfSoft", "Hotel Systems", "IndiaSoft", "Juliett Inovações", "Kilo Consultoria",
     "Lima Construções", "Mike Automação", "November InfoTech", "Oscar Networks", "Papa Segurança", "Quebec Serviços",

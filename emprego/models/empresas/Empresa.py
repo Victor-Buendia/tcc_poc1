@@ -4,7 +4,7 @@ from . import *
 class Empresa(BaseModel):
     def __init__(self, **kwargs):
         id_empresa = 1
-        nome = fake.random_element(elements=empresas)
+        nome = fake.random_element(elements=companies)
         cnpj = fake.cnpj()
         endereco = fake.address().replace('\n', ', ')
         cidade = fake.city()
@@ -18,7 +18,6 @@ class Empresa(BaseModel):
         pais = 'Brasil'
 
         telefone = fake.cellphone_number()
-        print(telefone, regex.match(pattern=r'^.\d{2} \(\d{2}\) \d{5}-\d{4}$', string=telefone))
         while regex.match(pattern=r'^.\d{2} \(\d{2}\) \d{5}-\d{4}$', string=telefone) == None:
             telefone = fake.cellphone_number()
 

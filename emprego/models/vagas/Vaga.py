@@ -1,4 +1,6 @@
+from datetime import datetime
 from models.BaseModel import *
+from . import *
 
 class Vaga(BaseModel):
     def __init__(self, **kwargs):
@@ -6,12 +8,12 @@ class Vaga(BaseModel):
 
         id_vaga = 1
         id_empresa = int(fake.random_element(elements=nro_empresas))
-        titulo = fake.job()
+        titulo = fake.random_element(elements=job_titles)
         contrato = fake.random_element(elements=['Estágio', 'CLT', 'PJ', 'Freelancer'])
         modalidade = fake.random_element(elements=['Remoto', 'Presencial', 'Híbrido'])
-        localizacao = f"{fake.city()}, {fake.estado()}"
+        localizacao = fake.estado()
         data_abertura = fake.date_this_year().isoformat()
-        data_fechamento = fake.date_this_year().isoformat()
+        data_fechamento = fake.date_between(start_date=datetime.strptime(data_abertura, '%Y-%m-%d')).isoformat()
 
         kwargs.setdefault('id_vaga', id_vaga)
         kwargs.setdefault('id_empresa', id_empresa)

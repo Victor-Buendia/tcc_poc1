@@ -21,7 +21,7 @@ class Empresa(BaseModel):
         while regex.match(pattern=r'^.\d{2} \(\d{2}\) \d{5}-\d{4}$', string=telefone) == None:
             telefone = fake.cellphone_number()
 
-        email = fake.domain_name()
+        dominio = fake.domain_name()
         
         kwargs.setdefault('id_empresa',     id_empresa)
         kwargs.setdefault('nome',           nome)
@@ -31,5 +31,5 @@ class Empresa(BaseModel):
         kwargs.setdefault('endereco',       endereco)
         kwargs.setdefault('pais',           pais)
         kwargs.setdefault('telefone',       telefone)
-        kwargs.setdefault('email',          email)
+        kwargs.setdefault('dominio',        dominio)
         super().__init__(**kwargs)

@@ -7,7 +7,7 @@ class Candidatura(BaseModel):
                          
         id_candidatura = 1
         id_vaga = int(fake.random_element(elements=nro_vagas))
-        nome = fake.random_element(elements=job_titles)
+        nome = fake.name()
         cpf = fake.cpf()
         data_nascimento = fake.date_of_birth(minimum_age=18, maximum_age=60).isoformat()
         genero = fake.random_element(elements=('Masculino', 'Feminino', 'Outro'))
@@ -21,11 +21,15 @@ class Candidatura(BaseModel):
             estado = fake.estado()
             
         pais = 'Brasil'
+        
         telefone = fake.cellphone_number()
-        email = fake.email()
+        while regex.match(pattern=r'^.\d{2} \(\d{2}\) \d{5}-\d{4}$', string=telefone) == None:
+            telefone = fake.cellphone_number()
+
+        email = regex.sub(pattern=r'@example\....', repl=fake.random_element(elements=['@gmail.com', '@hotmail.com', '@yahoo.com', '@outlook.com']), string=fake.ascii_safe_email())
         escolaridade = fake.random_element(elements=('Ensino Fundamental', 'Ensino Médio', 'Ensino Superior', 'Pós-Graduação', 'Mestrado', 'Doutorado'))
-        experiencia_profissional = fake.text(max_nb_chars=300)
-        habilidades = ', '.join(fake.words(nb=5))
+        experiencia_profissional = ' e '.join(fake.random_choices(elements=professional_experiences))
+        habilidades = ', '.join(fake.random_choices(elements=skills))
         idiomas = ', '.join(fake.random_choices(elements=['Inglês', 'Espanhol', 'Francês', 'Alemão', 'Chinês', 'Japonês']))
         portfolio_url = fake.url()
 

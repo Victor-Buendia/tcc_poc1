@@ -1,10 +1,12 @@
 import os
 import regex
 
-def separate_files(files: list[str], regex_pattern: str) -> dict[str, list[str]]:
+sorting_regex = regex.compile(pattern=r'_(\d+)\.')
+
+def separate_files(files: list[str], compiled_regex: str) -> dict[str, list[str]]:
     batches = {}
     for file in files:
-        directory = regex.search(pattern=regex.compile(pattern=regex_pattern), string=file).group(1)
+        directory = regex.search(pattern=compiled_regex, string=file).group(1)
         if directory not in batches:
             batches[directory] = [file]
         else:
@@ -17,4 +19,5 @@ def find_files(root_dir: str, file_extension: str) -> list[str]:
         for file in files:
             if file.endswith(file_extension):
                 json_files.append(os.path.join(root, file))
+    json_files.sort(key=lambda x: int(regex.search(pattern=sorting_regex, string=x).group(1)))
     return json_files

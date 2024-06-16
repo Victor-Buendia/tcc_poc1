@@ -20,11 +20,6 @@ services:
       - docker.env
     volumes:
       - ./emprego:/src
-    deploy:
-      resources:
-        reservations:
-          cpus: 0.7
-          memory: 8G
 
   duckdb:
     image: poc1-duckdb

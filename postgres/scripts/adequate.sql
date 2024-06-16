@@ -9,9 +9,8 @@ CREATE OR REPLACE TABLE vagas AS (
 
 CREATE OR REPLACE TABLE candidaturas AS (
     SELECT DISTINCT
-        c.* EXCLUDE(estado, endereco),
+        c.* EXCLUDE(estado),
         IF(v.modalidade = 'Remoto', c.estado, v.localizacao) AS estado,
-        IF(v.modalidade = 'Remoto', REGEXP_REPLACE(c.endereco, '/ (..)', '/ '||c.estado), REGEXP_REPLACE(c.endereco, '/ (..)', '/ '||v.localizacao[1])) AS endereco
     FROM candidaturas AS c
     LEFT JOIN vagas AS v ON c.id_vaga = v.id_vaga
 );

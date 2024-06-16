@@ -2,6 +2,7 @@ services:
   postgres:
     image: postgres:13
     container_name: poc1-postgres
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${PGDATABASE}
       POSTGRES_USER: ${PGUSER}
@@ -22,6 +23,8 @@ services:
       - ./emprego:/src
 
   duckdb:
+    depends_on:
+      - postgres
     image: poc1-duckdb
     container_name: poc1-duckdb
     env_file:

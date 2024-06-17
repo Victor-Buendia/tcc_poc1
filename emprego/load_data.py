@@ -7,14 +7,13 @@ from utils import *
 from logger.log import get_logger
 
 conn = duckdb.connect(database=os.environ.get('DUCKDB_PATH'), read_only=False)
-thread_amount = 8
+thread_amount = int(os.environ.get('LOAD_THREAD_AMOUNT'))
 log = get_logger('load_data')
 
 def query(thread_id: int, sqls: str):
     cur = conn.cursor()
-    log.info(f"Thread {thread_id} started")
     cur.execute(''.join(sqls))
-    log.info(f"Thread {thread_id} executed {len(sqls)} queries")
+    log.info(f"Thread {thread_id+1} executed {len(sqls)} queries")
 
 def load(path: str, file_extension: str, compiled_regex: str, table_prefix: str = ''):
     files = find_files(path, file_extension)
@@ -44,6 +43,7 @@ def load(path: str, file_extension: str, compiled_regex: str, table_prefix: str 
     for i in range(thread_amount):
         start = i * len(files) // thread_amount
         end = (i + 1) * len(files) // thread_amount
+        log.info(f"The thread {i+1} will process {start} to {end-1} queries")
         if i == thread_amount - 1:
             end = len(files)
         thread = threading.Thread(target=query, args=(i, copy_sqls[start:end]))

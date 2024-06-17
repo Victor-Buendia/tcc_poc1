@@ -21,7 +21,7 @@ measure:
 	$(MAKE) get-time
 	$(MAKE) get-sizes
 get-time:
-	sudo make clean; make psql generate; time make transform load fix ingest patch;
+	sudo make clean; make psql generate; time make transform;
 get-sizes:
 	echo "Size in Bytes:"
 	du -hs -B 1M emprego/data/raw

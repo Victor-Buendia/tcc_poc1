@@ -25,6 +25,7 @@ if __name__ == '__main__':
         log.info(f"Found {len(files)} files to process")
         log.debug(f"Files found: {files}")
 
+        log.info(f"{len(files)} files will be transformed")
         progress_value = manager.Value('i', 0)
         progress_bar_process = multiprocessing.Process(target=create_progress_bar, args=(progress_value, len(files)))
         progress_bar_process.start()

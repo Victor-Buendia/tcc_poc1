@@ -38,6 +38,7 @@ if __name__ == '__main__':
     with multiprocessing.Manager() as manager:
         log.info("Starting data generation...")
 
+        log.info(f"{processes*len(models)} files will be generated")
         progress_value = manager.Value('i', 0)
         progress_bar_process = multiprocessing.Process(target=create_progress_bar, args=(progress_value, processes*len(models)))
         progress_bar_process.start()

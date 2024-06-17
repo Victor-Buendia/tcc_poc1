@@ -2,6 +2,7 @@ import os
 import regex
 import duckdb
 import threading
+import multiprocessing
 
 from utils import *
 from logger.log import get_logger
@@ -13,16 +14,16 @@ log = get_logger('load_data')
 def query(thread_id: int, sqls: str):
     cur = conn.cursor()
     cur.execute(''.join(sqls))
-    log.info(f"Thread {thread_id+1} executed {len(sqls)} queries")
+    log.debug(f"Thread {thread_id+1} executed {len(sqls)} queries")
 
-def load(path: str, file_extension: str, compiled_regex: str, table_prefix: str = ''):
+def load(progress, path: str, file_extension: str, compiled_regex: str, table_prefix: str = ''):
     files = find_files(path, file_extension)
     log.info(f"Found {len(files)} files to process")
     log.debug(f"Files found: {files}")
 
     dirs = list({regex.search(pattern=compiled_regex, string=x).group(1) for x in files})
     batches = separate_files(files, compiled_regex)
-    log.info(f"The files were separated in {len(batches)} batches, namely: {batches.keys()}")
+    log.info(f"The files were separated in {len(batches)} batches, namely: {list(batches.keys())}")
     log.debug(f"Files in each batch: {batches}")
 
     log.info("Creating tables in DuckDB")
@@ -41,11 +42,13 @@ def load(path: str, file_extension: str, compiled_regex: str, table_prefix: str 
 
     threads = []
     for i in range(thread_amount):
+
         start = i * len(files) // thread_amount
         end = (i + 1) * len(files) // thread_amount
-        log.info(f"The thread {i+1} will process {start} to {end-1} queries")
         if i == thread_amount - 1:
             end = len(files)
+
+        log.info(f"The thread {i+1} will process {start} to {end-1} queries")
         thread = threading.Thread(target=query, args=(i, copy_sqls[start:end]))
         threads.append(thread)
 
@@ -53,14 +56,29 @@ def load(path: str, file_extension: str, compiled_regex: str, table_prefix: str 
     for thread in threads:
         thread.start()
 
+    progress_bar_process = multiprocessing.Process(target=create_progress_bar, args=(progress_value, thread_amount))
+    progress_bar_process.start()
+
     for thread in threads:
         thread.join()
+        progress.value += 1
+
+    progress_bar_process.join()
+    log.info("All threads finished")
 
 if __name__ == '__main__':
-    load(
-        path='./data/curated',
-        file_extension='json',
-        compiled_regex=regex.compile(os.environ.get('CURATED_REGEX')),
-    )
-    log.info("Ingestion completed")
+    with multiprocessing.Manager() as manager:
+        log.info("Starting data loading to DuckDB...")
+
+        log.info("{thread_amount} threads will be executed in parallel")
+        progress_value = manager.Value('i', 0)
+
+        load(
+            path='./data/curated',
+            file_extension='json',
+            compiled_regex=regex.compile(os.environ.get('CURATED_REGEX')),
+            progress=progress_value
+        )
+
+        log.info("Data loading completed")
 

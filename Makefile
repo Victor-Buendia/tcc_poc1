@@ -58,7 +58,7 @@ fix: # LOADS DATA FROM DUCKDB TO POSTGRES
 	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/postgres:/src/postgres --rm --name duckdb duckdb -no-stdin -init ./postgres/scripts/adequate.sql $(DB_PATH_ARG)
 	@echo "${BLUE}Data fixes with DuckDB finished!${END}"
 ingest: # INGESTS DATA INTO POSTGRES
-	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/postgres:/src/postgres --rm --name duckdb duckdb -no-stdin -init ./postgres/scripts/ingest.sql $(DB_PATH_ARG)
+	docker compose --env-file $(ENV_FILE) run -v $$(pwd)/emprego:/src --rm --name ingest_data worker ingest_data.py
 	@echo "${BLUE}Data ingestion from DuckDB to PostGres finished!${END}"
 patch: # MODIFIES DATA IN POSTGRES DATABASE
 	docker exec $$(docker ps -f name=post -q) psql -U ${PGUSER} -d ${PGDATABASE} -f ./postgres/scripts/constraints.sql

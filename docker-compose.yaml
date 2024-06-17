@@ -15,6 +15,8 @@ services:
       - "2024:5432"
 
   worker:
+    depends_on:
+        - postgres
     image: poc1-worker
     container_name: poc1-worker
     env_file:

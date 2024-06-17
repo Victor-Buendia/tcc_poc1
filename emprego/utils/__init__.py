@@ -1,7 +1,18 @@
 import os
 import regex
+import time
+from tqdm import tqdm
 
 sorting_regex = regex.compile(pattern=r'_(\d+)\.')
+
+def create_progress_bar(progress, total_tasks):
+    with tqdm(total=total_tasks, desc="Progress", position=0) as pbar:
+        while progress.value < total_tasks:
+            pbar.n = progress.value
+            pbar.refresh()
+            time.sleep(0.1)
+        pbar.n = total_tasks
+        pbar.refresh()
 
 def separate_files(files: list[str], compiled_regex: str) -> dict[str, list[str]]:
     batches = {}
